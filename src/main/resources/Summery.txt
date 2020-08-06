@@ -1,0 +1,61 @@
+
+Spring Cloud Eureka: is an Wrapper build on top of NetFlix Open Source project
+We have two different MicroServices,Basicaly two different Apps One is SERVER and one is CLIENT , The client will call the server end point
+We will create one intermediate  Eureka Server  which will act as   Discovery Server,Where the CLIENT does not know what's is the SERVER HOST NAME or PORT
+Intermedetiely it will take from Eureka Registery and that will route all the request to SERVER 
+
+UseFullness: Lets say we have a distrubted environment where we have lots off micro service  deployed and we have different process talking each other.
+ How ever we don't want the hostname and port name of each other to associated with it during the process.So in this case
+ Eureka will help here which will act as a naming registery.So when we  request from one micro service to other micro service ,we dont have to request using HOSTNAME
+ AND  PORT number insted we will use the APPLICATION NAME which is called SERVICE NAME as well register on the EUREKA .
+ 
+ 
+ Eureka-Service: The Eureka Service Which is the Service Registery
+  Dependency : (Eureka Server)spring-cloud-starter-netflix-eureka-server
+  @EnableEurekaServer
+ 
+ Eureka-Server: The Service which is going to give data to the client
+   Dependency:(Eureka Discovery)spring-cloud-starter-netflix-eureka-client
+   @EnableDiscoveryClient
+   
+ Eurek-Client: The Service which is going to get data from Server via the Discovery Service from the Service Registery(Eureka-Service)
+   Dependency:(Eureka Discovery) spring-cloud-starter-netflix-eureka-client
+   @EnableDiscoveryClient
+    --> For RestTemplet we have to @Bean and   @LoadBalanced
+   
+   Hystrix::
+   Specifies a method to process fallback logic.A fallback method should be defined in the same class where is HystrixCommand.
+   Also a fallback method should have same signature to a method which was invoked as hystrix command
+   Here the hello-client end point has been anotated with failback .if the "http://localhost:8070/rest/hello/server" service fail
+   this will invoke the fallbackMethod.
+   
+   @HystrixCommand(fallbackMethod = "fallback", groupKey = "Hello", commandKey = "hello", threadPoolKey = "helloThread")
+   
+   
+   Zulu::
+   	Zulu can act as an ApiGate way or act as a proxy. This act as an edge service application where it enable dynamic routing request
+   	multiple services.Zulu enables dynamic routing,monitoring,resilency and security.
+   	
+   	Only we need two annotation to enable ZuluProxy
+   	@EnableDiscoveryClient --> Register itself with Eureka Service
+	@EnableZuulProxy --> Enabled ZuluPorxy
+	
+	
+   
+   
+   
+    
+    Eureka:
+    	http://localhost:8070/
+    
+    Server:
+    	http://localhost:8071/rest/hello/server
+    
+    Client:
+    	http://localhost:8072/rest/hello/cclient
+    
+    Zulu: http://localhost:8079/api/client/rest/hello/cclient
+    	  http://localhost:8079/api/server/rest/hello/server
+ 
+ 
+

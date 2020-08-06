@@ -1,0 +1,31 @@
+spring:
+   application:
+      name: hello-client
+server:
+  port: 8072
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url: 
+         defaultZone: http://localhost:8070/eureka/
+         
+# Increase the Hystrix timeout to 60s (for all)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+         
+    
+
+    
+      
+  
+        
+        
+  
